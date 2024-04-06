@@ -2444,6 +2444,8 @@ class ThankYouPage(Page):
         )
 
 page_sequence = [
+    Introduction,
+    Personal_Information,
     Controversial_Questions,
     Prueba_Question,
     Forming_Groups_WaitPage_Prueba,
