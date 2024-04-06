@@ -1,0 +1,40 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+¿Estás de acuerdo con la nueva ley antitabaco en México?
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+<div class="container">
+    <h4 class="alert-heading">Respuesta secuencial y pública</h4>
+    <div class="alert alert-info" role="alert">
+        Eres el primer miembro en responder. Recuerda que tu respuesta será mostrada a todos en el grupo. Después de responder, cada otro miembro del grupo tendrá la oportunidad de distribuir 10 pesos entre tú y otro participante fuera del grupo que comparte la misma opinión que tu compañerx. Por favor, responde:
+    </div>
+    <form method="post">
+        {{ formfield "antitabaco_group" }}
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

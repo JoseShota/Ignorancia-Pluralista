@@ -1,0 +1,49 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+Expectativas de: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+
+<p>Gracias por la espera. En este momento tomarás el papel de juez y jugarás un juego de repartición de dinero entre el miembro 2 y un jugador fuera del grupo. Además te presentaremos una serie de preguntas sobre las expectativas que tienes sobre las opiniones verdaderas de los demás miembros.</p>
+
+
+<p>
+        Tienes 10 pesos que puedes distribuir entre el miembro 2 y un jugador escogido aleatoriamente fuera de este grupo,
+        el cual tiene la misma opinión que tú a la pregunta "¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?".
+        Escoge la cantidad que quisieras darle al miembro 2 de tu grupo. <strong>Recuerda que el miembro 2 escogió: {{ member2_response }}</strong>:
+</p>
+<form>
+    {{ formfield "Crisis_money_to_member2" }}
+<p><strong>Preguntas sobre las expectativas de las opiniones de los demás:</strong></p>
+    {{ formfield "Crisis_realtypeactor2" }}
+    {{ formfield "Crisis_realtypejuez1" }}
+    {{ formfield "Crisis_realtypejuez3" }}
+<button class="custom-button">{{ next_button_label }}</button>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,38 @@
+{{ extends 'global/Page.html' }}
+{{ block title }}Información Personal{{ endblock }}
+
+{{ block content }}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+
+<p>Para la primera parte del experimento queremos saber un poco más de ti. Toda la información proporcionada será tratada con confidencialidad y sólo se utilizará con fines estadísticos.</p>
+
+<p>Por favor, responde las siguientes preguntas:</p>
+
+<form>
+    {{ formfield "age" }}
+    {{ formfield 'gender' }}
+    {{ formfield "programa" }}
+    {{ formfield "ingreso" }}
+    {{ formfield "participacion" }}
+<button class="custom-button">{{ next_button_label }}</button>
+</form>
+
+{{ endblock }}
+
+
+
+

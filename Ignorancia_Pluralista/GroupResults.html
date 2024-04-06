@@ -1,0 +1,32 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+    Resultados de la discusión grupal
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h4>Resultados de la discusión sobre la ley antitabaco</h4>
+        {% if current_response %}
+            <div class="alert alert-info" role="alert">
+                La última respuesta en el grupo fue: "{{ current_response }}"
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Aún no hay respuestas en el grupo.
+            </div>
+        {% endif %}
+        
+        <h5>Todas las respuestas del grupo:</h5>
+        <ul>
+            {% for response in responses %}
+                <li>{{ response }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+
+
+
+

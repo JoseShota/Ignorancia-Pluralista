@@ -1,0 +1,36 @@
+{{ extends 'global/Page.html' }}
+{{ block title }}Experimento Grupal{{ endblock }}
+
+{{ block content }}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+<p>Muchas gracias por responder a las preguntas. Ahora te mostramos un listado de 4 preguntas. Las preguntas serán de tal manera que sólo podrás responder con una de las dos opciones presentadas en cada pregunta. Por ejemplo, ¿qué prefieres, las chokis o las oreo?</p>
+
+<p>Por favor, responde las siguientes preguntas:</p>
+
+<form>
+    {{ formfield "antitabaco" }}
+    {{ formfield "arte" }}
+    {{ formfield "violencia" }}
+    {{ formfield "crisis" }}
+    <button class="custom-button">{{ next_button_label }}</button>
+</form>
+
+{{ endblock }}
+
+
+
+

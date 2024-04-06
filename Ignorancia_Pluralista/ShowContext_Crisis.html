@@ -1,0 +1,34 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+Cuarta Ronda
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">{{ message_Crisis }}</h4>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-primary">{{ next_button_label }}</button>
+</form>
+{% endblock %}
+
+
+
+

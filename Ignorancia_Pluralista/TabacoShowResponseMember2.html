@@ -1,0 +1,38 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+¿Estás de acuerdo con la nueva ley antitabaco en México?
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+<div class="container">
+    <h4 class="alert-heading">Respuesta del Miembro 2</h4>
+    <div class="alert alert-info" role="alert">
+        La respuesta del Miembro 2 a la pregunta sobre la ley antitabaco fue: {{ member2_response }}
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+

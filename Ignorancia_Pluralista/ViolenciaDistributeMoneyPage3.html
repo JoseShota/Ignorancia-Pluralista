@@ -1,0 +1,49 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+Expectativas de: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+
+<p>Gracias por la espera. En este momento tomarás el papel de juez y jugarás un juego de repartición de dinero entre el miembro 3 y un jugador fuera del grupo. Además te presentaremos una serie de preguntas sobre las expectativas que tienes sobre las opiniones verdaderas de los demás miembros.</p>
+
+
+<p>
+        Tienes 10 pesos que puedes distribuir entre el miembro 3 y un jugador escogido aleatoriamente fuera de este grupo,
+        el cual tiene la misma opinión que tú a la pregunta "¿Estás de acuerdo con la frase “no hay paz sin la violencia”?".
+        Escoge la cantidad que quisieras darle al miembro 3 de tu grupo. <strong>Recuerda que el miembro 3 escogió: {{ member3_response }}</strong>:
+</p>
+<form>
+    {{ formfield "Violencia_money_to_member3" }}
+<p><strong>Preguntas sobre las expectativas de las opiniones de los demás:</strong></p>
+    {{ formfield "Violencia_realtypeactor3" }}
+    {{ formfield "Violencia_realtypejuez1" }}
+    {{ formfield "Violencia_realtypejuez2" }}
+<button class="custom-button">{{ next_button_label }}</button>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+

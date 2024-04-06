@@ -1,0 +1,44 @@
+{% extends 'global/Page.html' %}
+
+{% block title %}
+Expectativas de: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?
+{% endblock %}
+
+{% block content %}
+<style>
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+
+<p>Gracias por la espera. En este momento los demás miembros del grupo toman el rol de jueces y deciden cuánto de los 10 pesos que disponen cada uno repartirlo contigo. Ahora te presentamos una serie de preguntas enfocadas a conocer las expectativas que tienes respecto a las opiniones de los demás miembros del grupo.</p>
+
+<p>En esta sección es posible que ganes 5 pesos dependiendo de tus respuestas respecto a las opiniones verdaderas de los demás miembros. Es decir, si aciertas en las dos últimas preguntas, y esta es la ronda que se seleccionó para el premio, entonces ganarás los 5 pesos. Por favor, responde:</p>
+
+<form>
+    {{ formfield "Violencia_money_expected2" }}
+    {{ formfield "Violencia_money_expected3" }}
+    {{ formfield "Violencia_money_notexpected2" }}
+    {{ formfield "Violencia_money_notexpected3" }}
+    {{ formfield "Violencia_realtypejueces2" }}
+    {{ formfield "Violencia_realtypejueces3" }}
+<button class="custom-button">{{ next_button_label }}</button>
+</form>
+{% endblock %}
+
+
+
+
+
+
+
