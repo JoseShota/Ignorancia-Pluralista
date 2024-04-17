@@ -1,0 +1,52 @@
+{{ extends 'global/Page.html' }}
+{{ block title }}Hoja de Consentimiento Informado{{ endblock }}
+
+{{ block content }}
+<style>
+    body {
+        font-family: 'Arial', sans-serif; /* Estilo de fuente más legible */
+        line-height: 1.6; /* Espaciado entre líneas */
+    }
+    h1 {
+        color: #333; /* Color oscuro para mejor lectura */
+    }
+    .participant-code {
+        font-size: 20px; /* Tamaño de fuente más grande */
+        font-weight: bold; /* Negrita para destacar */
+        display: inline-block; /* Asegura que se destaque en su propia línea */
+        background-color: #f2f2f2; /* Fondo sutil para resaltar */
+        padding: 5px; /* Espaciado interno */
+        border-radius: 5px; /* Bordes ligeramente redondeados */
+        margin-top: 10px; /* Margen superior */
+    }
+    p {
+        margin-bottom: 15px; /* Margen inferior para los párrafos */
+    }
+    .custom-button {
+        background-color: blue; /* Color de fondo */
+        color: white; /* Color del texto */
+        border: none; /* Sin bordes */
+        padding: 10px 20px; /* Espaciado interno */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Bordes redondeados */
+    }
+</style>
+
+<p>Este experimento se realiza con fines de investigación. La participación es completamente voluntaria y puedes retirarte en cualquier momento sin ninguna penalización.</p>
+
+<p>En este estudio se respetará tu anonimato y la confidencialidad de tus respuestas. Los datos recopilados serán utilizados únicamente con propósitos científicos y educativos. No se compartirán datos personales con terceros.</p>
+
+<p>Si decides participar, por favor indica tu consentimiento a continuación.</p>
+
+<form>
+    {{ formfield "consentimiento" }}
+</form>
+
+<button class="custom-button">{{ next_button_label }}</button>
+{{ endblock }}
+

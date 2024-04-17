@@ -1,7 +1,6 @@
-from otree.api import *
+from otree.api import * 
 from collections import defaultdict
 import random
-
 
 
 class C(BaseConstants):
@@ -9,7 +8,6 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5
 
-#NUEVO
 class Subsession(BaseSubsession):
     def creating_session(self):
         if self.round_number == 1:
@@ -168,7 +166,6 @@ class Subsession(BaseSubsession):
         self.set_group_matrix(group_matrix_Crisis)
         print("Matriz de grupos después de set_group_matrix_Crisis:", self.get_group_matrix())
 
-
 class Group(BaseGroup):
     groups_formed_Prueba = models.BooleanField(initial=False)
     groups_formed_Tabaco = models.BooleanField(initial=False)
@@ -183,9 +180,9 @@ class Group(BaseGroup):
     group_crisis_responses = models.LongStringField()
     last_response = models.StringField(initial="")  # Agregar este campo para almacenar la última respuesta
 
-
 class Player(BasePlayer):
     #Información Personal
+    consentimiento = models.StringField(choices=[['Acepto', 'Acepto'], ['No acepto', 'No acepto']], label='Acepto participar voluntariamente en este experimento, y entiendo que puedo retirar mi consentimiento en cualquier momento:')
     age = models.IntegerField(label='Edad:')
     gender = models.StringField(choices=[['Femenino', 'Femenino'], ['Masculino', 'Masculino'], ['No binarix', 'No binarix']], label='Sexo:')
     programa = models.StringField(choices = [['Licenciatura en Economía', 'Licenciatura en Economía'], ['Licenciatura en Ciencia Política y Relaciones Internacionales', 'Licenciatura en Ciencia Política y Relaciones Internacionales'], ['Licenciatura en Derecho', 'Licenciatura en Derecho'], ['Maestría en Economía', 'Maestría en Economía'], ['Maestría en Ciencia Política', 'Maestría en Ciencia Política']], label='¿En qué programa estás?')
@@ -210,14 +207,14 @@ class Player(BasePlayer):
 
     #Preguntas Controversiales
     antitabaco = models.StringField(
-        label= '¿Estás de acuerdo con la nueva ley antitabaco en México?',
+        label= '¿Estás de acuerdo con la ley antitabaco en México? (Con la ley antitabaco en México, se prohíbe fumar en todos los espacios públicos cerrados, medios de transporte público, playas, parques y cualquier lugar accesible al público, tanto interiores como exteriores.)',
         choices=[
             ['De acuerdo', 'De acuerdo'],
             ['En desacuerdo', 'En desacuerdo']
         ]
     )
     arte= models.StringField(
-        label= '¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?',
+        label= '¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo (destreza técnica) que el arte en los museos clásicos?',
         choices=[
             ['Sí tiene el mismo virtuosismo', 'Sí tiene el mismo virtuosismo'],
             ['No tiene el mismo virtuosismo', 'No tiene el mismo virtuosismo']
@@ -238,9 +235,61 @@ class Player(BasePlayer):
         ]
     )
 
+    #Disposición a mentir
+
+    mentir_antitabaco = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada dispuesto y 10 es muy dispuesto a mentir. ¿Qué tan dispuesto estarías a mentir si sabes que todos tienen una opinión diferente a tu opinión verdadera a la pregunta, Estás de acuerdo con la ley antitabaco en México?"
+    )
+
+    mentir_arte = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada dispuesto y 10 es muy dispuesto a mentir. ¿Qué tan dispuesto estarías a mentir si sabes que todos tienen una opinión diferente a tu opinión verdadera a la pregunta, El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo (destreza técnica) que el arte en los museos clásicos?"
+    )
+
+    mentir_violencia = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada dispuesto y 10 es muy dispuesto a mentir. ¿Qué tan dispuesto estarías a mentir si sabes que todos tienen una opinión diferente a tu opinión verdadera a la pregunta, Estás de acuerdo con la frase “no hay paz sin la violencia”?"
+    )
+
+    mentir_crisis = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada dispuesto y 10 es muy dispuesto a mentir. ¿Qué tan dispuesto estarías a mentir si sabes que todos tienen una opinión diferente a tu opinión verdadera a la pregunta, Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?"
+    )
+
+    #Grado de molestia
+
+    molestia_antitabaco = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada y 10 es bastante. ¿Qué tanto te molestaría que alguien tenga una opinión diferente a la tuya a la pregunta, Estás de acuerdo con la ley antitabaco en México?"
+    )
+    
+    molestia_arte = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada y 10 es bastante. ¿Qué tanto te molestaría que alguien tenga una opinión diferente a la tuya a la pregunta, El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo (destreza técnica) que el arte en los museos clásicos?"
+    )
+
+    molestia_violencia = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada y 10 es bastante. ¿Qué tanto te molestaría que alguien tenga una opinión diferente a la tuya a la pregunta, Estás de acuerdo con la frase “no hay paz sin la violencia”?"
+    )
+
+    molestia_crisis = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada y 10 es bastante. ¿Qué tanto te molestaría que alguien tenga una opinión diferente a la tuya a la pregunta, Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?"
+    )
+
     #Pregunta de prueba
     prueba = models.StringField(
-        label= '¿Qué es mejor, las Oreo o las Chokis?',
+        label= '¿Qué crees que es mejor, las Oreo o las Chokis?',
         choices=[
             ['Oreo', 'Oreo'],
             ['Chokis', 'Chokis']
@@ -249,7 +298,7 @@ class Player(BasePlayer):
 
     #Pregunta de prueba durante la interacción grupal
     prueba_group = models.StringField(
-        label= '¿Qué es mejor, las Oreo o las Chokis?',
+        label= '¿Qué crees que es mejor, las Oreo o las Chokis?',
         choices=[
             ['Oreo', 'Oreo'],
             ['Chokis', 'Chokis']
@@ -258,7 +307,7 @@ class Player(BasePlayer):
 
     #Preguntas Controversiales durante la interacción grupal
     antitabaco_group = models.StringField(
-        label= '¿Estás de acuerdo con la nueva ley antitabaco en México?',
+        label= '¿Estás de acuerdo con la ley antitabaco en México? (Con la ley antitabaco en México, se prohíbe fumar en todos los espacios públicos cerrados, medios de transporte público, playas, parques y cualquier lugar accesible al público, tanto interiores como exteriores.)',
         choices=[
             ['De acuerdo', 'De acuerdo'],
             ['En desacuerdo', 'En desacuerdo']
@@ -266,7 +315,7 @@ class Player(BasePlayer):
     )
 
     arte_group= models.StringField(
-        label= '¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?',
+        label= '¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo (destreza técnica) que el arte en los museos clásicos?',
         choices=[
             ['Sí tiene el mismo virtuosismo', 'Sí tiene el mismo virtuosismo'],
             ['No tiene el mismo virtuosismo', 'No tiene el mismo virtuosismo']
@@ -847,6 +896,16 @@ class Introduction(Page):
         return self.round_number == 1
 
     def vars_for_template(self):
+        return dict(next_button_label="Continuar a Página de Consentimiento")
+
+class Consent(Page):
+    form_model = 'player'
+    form_fields = ['consentimiento']
+
+    def is_displayed(self):
+        return self.round_number == 1
+    
+    def vars_for_template(self):
         return dict(next_button_label="Continuar a Primer Periodo")
 
 class Personal_Information(Page):
@@ -860,7 +919,7 @@ class Personal_Information(Page):
 
 class Controversial_Questions(Page):
     form_model = 'player'
-    form_fields = ['antitabaco', 'arte', 'violencia', 'crisis']
+    form_fields = ['antitabaco', 'arte', 'violencia', 'crisis', 'mentir_antitabaco', 'mentir_arte', 'mentir_violencia', 'mentir_crisis', 'molestia_antitabaco', 'molestia_arte', 'molestia_violencia', 'molestia_crisis']
     def is_displayed(self):
         return self.round_number == 1
     
@@ -969,7 +1028,6 @@ class Forming_Groups_WaitPage_Prueba(WaitPage):
         
         group.groups_formed_Prueba = True
 
-
 class GroupingSyncWaitPage_Prueba(WaitPage):
     def is_displayed(self):
         return self.round_number == 1
@@ -978,7 +1036,6 @@ class GroupingSyncWaitPage_Prueba(WaitPage):
         # Llama al método set_custom_grouping directamente, no como una cadena
         self.subsession.set_custom_grouping_Prueba()
    
-
 class ShowContext_Prueba(Page):
     def is_displayed(self):
         return self.round_number == 1
@@ -990,11 +1047,11 @@ class ShowContext_Prueba(Page):
         if context_Prueba == "Contexto Alto":
             message_Prueba = f"""Bienvenido a la ronda de prueba del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es mejor, las Oreo o las Chokis?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Prueba}.
 
-Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Oreo” y 3 eligieron “Chokis" a la pregunta: ¿Qué es mejor, las Oreo o las Chokis?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Oreo” y 3 eligieron “Chokis" a la pregunta: ¿Qué crees que es mejor, las Oreo o las Chokis?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Prueba == "Contexto Bajo":
             message_Prueba = f"""Bienvenido a la ronda de prueba del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es mejor, las Oreo o las Chokis?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Prueba}.
 
-Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Oreo” y 3 eligieron “Chokis” a la pregunta: ¿Qué es mejor, las Oreo o las Chokis?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Oreo” y 7 eligieron “Chokis” a la pregunta: ¿Qué es mejor, las Oreo o las Chokis?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Oreo” y 3 eligieron “Chokis” a la pregunta: ¿Qué crees que es mejor, las Oreo o las Chokis?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Oreo” y 7 eligieron “Chokis” a la pregunta: ¿Qué crees que es mejor, las Oreo o las Chokis?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Prueba == "Sin Contexto":
             message_Prueba = f"""Bienvenido a la ronda de prueba del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es mejor, las Oreo o las Chokis?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Prueba}. Creamos el grupo aleatoriamente."""
 
@@ -1003,7 +1060,6 @@ Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones di
             'message_Prueba': message_Prueba,
             'next_button_label': "Continuar"
         }
-
 
 # Interacción Grupal Prueba
 class PruebaQuestion1(Page):
@@ -1058,15 +1114,13 @@ class PruebaDistributeMoneyPage1(Page):
         member1 = self.group.get_player_by_id(1)
         return {'member1_response': member1.prueba_group,
                 'next_button_label': "Continuar"}
-    
-    
+      
 class PruebaWaitForMoneyDistribution1(WaitPage):
     def is_displayed(self):
         return self.round_number == 1
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
-
 
 class PruebaQuestion2(Page):
     form_model = 'player'
@@ -1077,7 +1131,6 @@ class PruebaQuestion2(Page):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
-
 
 class PruebaWaitForMember2(WaitPage):
     def is_displayed(self):
@@ -1283,7 +1336,6 @@ class Forming_Groups_WaitPage_Tabaco(WaitPage):
         
         group.groups_formed_Tabaco = True
 
-
 class GroupingSyncWaitPage_Tabaco(WaitPage):
     def is_displayed(self):
         return self.round_number == 2
@@ -1292,7 +1344,6 @@ class GroupingSyncWaitPage_Tabaco(WaitPage):
         # Llama al método set_custom_grouping directamente, no como una cadena
         self.subsession.set_custom_grouping_Tabaco()
    
-
 class ShowContext_Tabaco(Page):
     def is_displayed(self):
         return self.round_number == 2
@@ -1304,11 +1355,11 @@ class ShowContext_Tabaco(Page):
         if context_Tabaco == "Contexto Alto":
             message_Tabaco = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la nueva ley antitabaco en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Tabaco}.
 
-Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “De acuerdo” y 3 eligieron “En desacuerdo" a la pregunta: ¿Estás de acuerdo con la nueva ley antitabaco en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “De acuerdo” y 3 eligieron “En desacuerdo" a la pregunta: ¿Estás de acuerdo con la ley antitabaco en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Tabaco == "Contexto Bajo":
             message_Tabaco = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la nueva ley antitabaco en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Tabaco}.
 
-Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “De acuerdo” y 3 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la nueva ley antitabaco en México?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “De acuerdo” y 7 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la nueva ley antitabaco en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “De acuerdo” y 3 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la ley antitabaco en México?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “De acuerdo” y 7 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la ley antitabaco en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Tabaco == "Sin Contexto":
             message_Tabaco = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la nueva ley antitabaco en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Tabaco}. Creamos el grupo aleatoriamente."""
 
@@ -1319,6 +1370,7 @@ Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones di
         }
 
 # Interacción Grupal Tabaco
+
 class AntitabacoQuestion1(Page):
     form_model = 'player'
     form_fields = ['antitabaco_group']
@@ -1379,7 +1431,6 @@ class TabacoWaitForMoneyDistribution1(WaitPage):
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
 
-
 class AntitabacoQuestion2(Page):
     form_model = 'player'
     form_fields = ['antitabaco_group']
@@ -1389,7 +1440,6 @@ class AntitabacoQuestion2(Page):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
-
 
 class TabacoWaitForMember2(WaitPage):
     def is_displayed(self):
@@ -1507,6 +1557,7 @@ class GlobalSyncWaitPage_Arte(WaitPage):
         self.session.vars['groups_formed_Arte'] = False
         print("Variables reseteadas, listo para formar grupos para Arte.")
     #Página de Espera
+
 class Forming_Groups_WaitPage_Arte(WaitPage):
     def is_displayed(self):
         return self.round_number == 3
@@ -1595,7 +1646,6 @@ class Forming_Groups_WaitPage_Arte(WaitPage):
         
         group.groups_formed_Arte = True
 
-
 class GroupingSyncWaitPage_Arte(WaitPage):
     def is_displayed(self):
         return self.round_number == 3
@@ -1604,7 +1654,6 @@ class GroupingSyncWaitPage_Arte(WaitPage):
         # Llama al método set_custom_grouping directamente, no como una cadena
         self.subsession.set_custom_grouping_Arte()
    
-
 class ShowContext_Arte(Page):
     def is_displayed(self):
         return self.round_number == 3
@@ -1616,11 +1665,11 @@ class ShowContext_Arte(Page):
         if context_Arte == "Contexto Alto":
             message_Arte = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Arte}.
 
-Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Sí tiene el mismo virtuosismo” y 3 eligieron “No tiene el mismo virtuosismo" a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Sí tiene el mismo virtuosismo” y 3 eligieron “No tiene el mismo virtuosismo" a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Arte == "Contexto Bajo":
             message_Arte = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Arte}.
 
-Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Sí tiene el mismo virtuosismo” y 3 eligieron “No tiene el mismo virtuosismo” a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Sí tiene el mismo virtuosismo” y 7 eligieron “No tiene el mismo virtuosismo” a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Sí tiene el mismo virtuosismo” y 3 eligieron “No tiene el mismo virtuosismo” a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Sí tiene el mismo virtuosismo” y 7 eligieron “No tiene el mismo virtuosismo” a la pregunta: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Arte == "Sin Contexto":
             message_Arte = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿El arte que se exhibe en los museos de arte contemporáneo ya no tiene el mismo virtuosismo que el arte en los museos clásicos?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Arte}. Creamos el grupo aleatoriamente."""
 
@@ -1692,7 +1741,6 @@ class ArteWaitForMoneyDistribution1(WaitPage):
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
 
-
 class ArteQuestion2(Page):
     form_model = 'player'
     form_fields = ['arte_group']
@@ -1702,7 +1750,6 @@ class ArteQuestion2(Page):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
-
 
 class ArteWaitForMember2(WaitPage):
     def is_displayed(self):
@@ -1820,6 +1867,7 @@ class GlobalSyncWaitPage_Violencia(WaitPage):
         self.session.vars['groups_formed_Violencia'] = False
         print("Variables reseteadas, listo para formar grupos para Violencia.")
     #Página de Espera
+
 class Forming_Groups_WaitPage_Violencia(WaitPage):
     def is_displayed(self):
         return self.round_number == 4
@@ -1908,7 +1956,6 @@ class Forming_Groups_WaitPage_Violencia(WaitPage):
         
         group.groups_formed_Violencia = True
 
-
 class GroupingSyncWaitPage_Violencia(WaitPage):
     def is_displayed(self):
         return self.round_number == 4
@@ -1917,7 +1964,6 @@ class GroupingSyncWaitPage_Violencia(WaitPage):
         # Llama al método set_custom_grouping directamente, no como una cadena
         self.subsession.set_custom_grouping_Violencia()
    
-
 class ShowContext_Violencia(Page):
     def is_displayed(self):
         return self.round_number == 4
@@ -1929,11 +1975,11 @@ class ShowContext_Violencia(Page):
         if context_Violencia == "Contexto Alto":
             message_Violencia = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Violencia}.
 
-Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “De acuerdo” y 3 eligieron “En desacuerdo" a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “De acuerdo” y 3 eligieron “En desacuerdo" a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Violencia == "Contexto Bajo":
             message_Violencia = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Violencia}.
 
-Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “De acuerdo” y 3 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “De acuerdo” y 7 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “De acuerdo” y 3 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “De acuerdo” y 7 eligieron “En desacuerdo” a la pregunta: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Violencia == "Sin Contexto":
             message_Violencia = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Estás de acuerdo con la frase “no hay paz sin la violencia”?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Violencia}. Creamos el grupo aleatoriamente."""
 
@@ -2005,7 +2051,6 @@ class ViolenciaWaitForMoneyDistribution1(WaitPage):
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
 
-
 class ViolenciaQuestion2(Page):
     form_model = 'player'
     form_fields = ['violencia_group']
@@ -2015,7 +2060,6 @@ class ViolenciaQuestion2(Page):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
-
 
 class ViolenciaWaitForMember2(WaitPage):
     def is_displayed(self):
@@ -2133,6 +2177,7 @@ class GlobalSyncWaitPage_Crisis(WaitPage):
         self.session.vars['groups_formed_Crisis'] = False
         print("Variables reseteadas, listo para formar grupos para Crisis.")
     #Página de Espera
+
 class Forming_Groups_WaitPage_Crisis(WaitPage):
     def is_displayed(self):
         return self.round_number == 5
@@ -2221,7 +2266,6 @@ class Forming_Groups_WaitPage_Crisis(WaitPage):
         
         group.groups_formed_Crisis = True
 
-
 class GroupingSyncWaitPage_Crisis(WaitPage):
     def is_displayed(self):
         return self.round_number == 5
@@ -2230,7 +2274,6 @@ class GroupingSyncWaitPage_Crisis(WaitPage):
         # Llama al método set_custom_grouping directamente, no como una cadena
         self.subsession.set_custom_grouping_Crisis()
    
-
 class ShowContext_Crisis(Page):
     def is_displayed(self):
         return self.round_number == 5
@@ -2242,11 +2285,11 @@ class ShowContext_Crisis(Page):
         if context_Crisis == "Contexto Alto":
             message_Crisis = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Crisis}.
 
-Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Crisis climática” y 3 eligieron “La pobreza extrema" a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo a partir de una población de 10 personas. De estas 10, 7 eligieron “Crisis climática” y 3 eligieron “La pobreza extrema" a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Crisis == "Contexto Bajo":
             message_Crisis = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Crisis}.
 
-Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Crisis climática” y 3 eligieron “La pobreza extrema” a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Crisis climática” y 7 eligieron “La pobreza extrema” a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
+    Creamos el grupo tras seleccionar aleatoriamente a una de las dos poblaciones disponibles, cada una con 10 personas, para el presente experimento. La primera población, con una probabilidad del 50%, donde 7 de las personas eligieron “Crisis climática” y 3 eligieron “La pobreza extrema” a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. La segunda población, con una probabilidad del 50%, donde 3 de las personas eligieron “Crisis climática” y 7 eligieron “La pobreza extrema” a la pregunta: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. Escogimos a cada uno de los integrantes aleatoriamente."""
         elif context_Crisis == "Sin Contexto":
             message_Crisis = f"""Bienvenido a la segunda parte del experimento. Gracias por la espera, reunimos la información de todas las respuestas de los participantes. Para esta sección te hemos colocado en un grupo con otras dos personas. Van a tomar turnos para responder la siguiente pregunta en frente de los demás: ¿Qué es más importante, afrontar la crisis climática o terminar la pobreza extrema en México?. A cada uno le asignamos un número que representa el orden en el que responderán a la pregunta, el tuyo es el {order_number_Crisis}. Creamos el grupo aleatoriamente."""
 
@@ -2318,7 +2361,6 @@ class CrisisWaitForMoneyDistribution1(WaitPage):
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
 
-
 class CrisisQuestion2(Page):
     form_model = 'player'
     form_fields = ['crisis_group']
@@ -2328,7 +2370,6 @@ class CrisisQuestion2(Page):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
-
 
 class CrisisWaitForMember2(WaitPage):
     def is_displayed(self):
@@ -2445,6 +2486,7 @@ class ThankYouPage(Page):
 
 page_sequence = [
     Introduction,
+    Consent,
     Personal_Information,
     Controversial_Questions,
     Prueba_Question,
