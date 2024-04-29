@@ -1,5 +1,5 @@
 {{ extends 'global/Page.html' }}
-{{ block title }}Bienvenidx al Experimento Grupal{{ endblock }}
+{{ block title }}Experimento Grupal{{ endblock }}
 
 {{ block content }}
 <style>
@@ -44,13 +44,13 @@
 
 <h1 class="section-title">¿De qué va el experimento?</h1>
 
-<p>Bienvenidx, ahora formas parte de un proyecto de investigación. Con este experimento, queremos estudiar cómo las personas interactúan dentro de un grupo cuando se discute sobre algún tema. Durante la prueba podrás ganar hasta 25 pesos mexicanos o más, nosotros te indicaremos en qué momento. Por ello, es importante que leas cuidadosamente las instrucciones. Los resultados del experimento, junto con tu posible pago, serán reportados cuando se concluya la investigación.</p>
+<p>Gracias por participar, ahora formas parte de un proyecto de investigación. Con este experimento, queremos estudiar cómo las personas interactúan dentro de un grupo cuando se discute sobre algún tema. Durante la prueba podrás ganar 25 pesos mexicanos o más. Por ello, es importante que leas cuidadosamente las instrucciones. Los resultados del experimento, junto con tu posible pago, serán reportados cuando se concluya la investigación.</p>
 
 <p>Antes de comenzar, por favor toma nota de tu código único de participante: <strong>{{ participant.code }}</strong>. Es importante que lo anotes y guardes en un lugar seguro, ya que será utilizado para identificarte de forma anónima y asegurar la entrega de tu pago al final de la investigación, después de realizar los cálculos pertinentes.</p>
 
 <p>El experimento consta de dos periodos. En el primero recabaremos tu información personal y te presentaremos 4 preguntas que determinarán la dinámica grupal. Las preguntas serán de tal manera que sólo podrás responder con una de las dos opciones presentadas en cada pregunta. Por ejemplo, ¿qué prefieres, el color azul o el rojo? Después de estas preguntas, participarás en una ronda de práctica que te permitirá entender mejor el funcionamiento del juego de interacción grupal. Después de la ronda de práctica, jugarás cuatro rondas más.</p>
     
-<p>Para las rondas te agruparemos en grupos de 3 personas. Después de ello cada uno de los participantes tomará turnos para responder nuevamente a la pregunta (que fue parte de las 4 preguntas previamente mencionadas) de la ronda actual. La respuesta será pública, los tres miembros del grupo sabrá qué respondió cada uno. Después de que un miembro haya respondido a la pregunta, los demás jugadores tomarán el papel de jueces y evaluarán la respuesta. Es aquí donde podrás ganar parte del pago. Durante la evaluación de los jueces, el miembro que respondió a la pregunta públicamente tendrá que responder preguntas sobre las expectativas de las opiniones de los jueces. Es aquí donde puedes ganar la otra parte del pago del experimento.</p>
+<p>Para las rondas te agruparemos en grupos de 3 personas. Después de ello cada uno de los participantes tomará turnos para responder nuevamente a las preguntas sobre opinión del cuestionario inicial. Cada ronda representa una pregunta del cuestionario inicial. La respuesta será pública, los tres miembros del grupo sabrán qué respondió cada uno. Después de que un miembro haya respondido a la pregunta, los demás jugadores tomarán el papel de jueces y evaluarán la respuesta. La forma en que evaluarán la respuesta es la siguiente, cada juez distribuirá 10 pesos entre el miembro que acaba de expresar su opinión y un participante fuera del grupo que tiene la misma opinión que el juez. Durante la evaluación de los jueces, el miembro que respondió a la pregunta públicamente tendrá que responder preguntas sobre las expectativas de las opiniones de los jueces. Si el miembro acierta correctamente sobre las opiniones que tienen los jueces podrá ganar 5 pesos.</p>
 
 <p>Para el pago escogeremos al azar una de estas cuatro rondas en la que podrás ganar hasta 25 pesos mexicanos o más. No te informaremos qué ronda se seleccionó. Toda la dinámica del experimento se llevará a cabo desde tu computadora o celular, por favor no des refresh a la página mientras estés en el experimento. No puedes comunicarte con tus compañerxs de a lado. Te agradecemos mucho tu participación.</p>
 <button class="custom-button">{{ next_button_label }}</button>
