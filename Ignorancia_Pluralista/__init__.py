@@ -205,6 +205,14 @@ class Player(BasePlayer):
         ]
     )
 
+    #Tratamientos
+
+    context_text_Prueba = models.StringField()
+    context_text_Tabaco = models.StringField()
+    context_text_Arte = models.StringField()
+    context_text_Violencia = models.StringField()
+    context_text_Crisis = models.StringField()
+
     #Preguntas Controversiales
     antitabaco = models.StringField(
         label= '¿Estás de acuerdo con la ley antitabaco en México? (Con la ley antitabaco en México, se prohíbe fumar en todos los espacios públicos cerrados, medios de transporte público, playas, parques y cualquier lugar accesible al público, tanto interiores como exteriores.)',
@@ -237,6 +245,12 @@ class Player(BasePlayer):
 
     #Disposición a mentir
 
+    mentir_prueba = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada dispuesto y 10 es muy dispuesto a mentir. ¿Qué tan dispuesto estarías a mentir si sabes que todos tienen una opinión diferente a tu opinión verdadera a la pregunta, Qué crees que es mejor, las Oreo o las Chokis?"
+    )
+
     mentir_antitabaco = models.IntegerField(
         min=1,
         max=10,
@@ -262,6 +276,12 @@ class Player(BasePlayer):
     )
 
     #Grado de molestia
+
+    molestia_prueba = models.IntegerField(
+        min=1,
+        max=10,
+        label="En una escala del 1 al 10, donde 1 es nada y 10 es bastante. ¿Qué tanto te molestaría que alguien tenga una opinión diferente a la tuya a la pregunta, Qué crees que es mejor, las Oreo o las Chokis?"
+    )
 
     molestia_antitabaco = models.IntegerField(
         min=1,
@@ -935,7 +955,7 @@ class Controversial_Questions(Page):
 
 class Prueba_Question(Page):
     form_model = 'player'
-    form_fields = ['prueba']
+    form_fields = ['prueba', 'mentir_prueba', 'molestia_prueba']
     def is_displayed(self):
         return self.round_number == 1
     
@@ -988,6 +1008,7 @@ class Forming_Groups_WaitPage_Prueba(WaitPage):
                 # Asignar contexto y actualizar contadores
                 for player in selected_players:
                     player.participant.vars['context_Prueba'] = f"Contexto {contexto_seleccionado}"
+                    player.context_text_Prueba = f"Contexto {contexto_seleccionado}"
                     player.participant.vars['group_number_Prueba'] = group_number_Prueba
                     player.participant.vars['order_number_Prueba'] = order_number_Prueba  # Asignar número de orden
                     order_number_Prueba += 1
@@ -1242,7 +1263,7 @@ class GlobalSyncWaitPage_Tabaco(WaitPage):
     wait_for_all_groups = True
 
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
 
     def after_all_players_arrive(self):
         self.session.vars['groups_formed_Tabaco'] = False
@@ -1250,7 +1271,7 @@ class GlobalSyncWaitPage_Tabaco(WaitPage):
 
 class Forming_Groups_WaitPage_Tabaco(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
 
     def body_text(self):
         return "Gracias por responder a las preguntas. Por favor espere a la indicación del encargado.<br><br>Favor de esperar a que todos los participantes hayan respondido a las preguntas."
@@ -1296,6 +1317,7 @@ class Forming_Groups_WaitPage_Tabaco(WaitPage):
                 # Asignar contexto y actualizar contadores
                 for player in selected_players:
                     player.participant.vars['context_Tabaco'] = f"Contexto {contexto_seleccionado}"
+                    player.context_text_Tabaco = f"Contexto {contexto_seleccionado}"
                     player.participant.vars['group_number_Tabaco'] = group_number_Tabaco
                     player.participant.vars['order_number_Tabaco'] = order_number_Tabaco  # Asignar número de orden
                     order_number_Tabaco += 1
@@ -1338,7 +1360,7 @@ class Forming_Groups_WaitPage_Tabaco(WaitPage):
 
 class GroupingSyncWaitPage_Tabaco(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
 
     def after_all_players_arrive(self):
         # Llama al método set_custom_grouping directamente, no como una cadena
@@ -1346,7 +1368,7 @@ class GroupingSyncWaitPage_Tabaco(WaitPage):
    
 class ShowContext_Tabaco(Page):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
 
     def vars_for_template(self):
         context_Tabaco = self.participant.vars.get('context_Tabaco', 'Sin Contexto')
@@ -1376,7 +1398,7 @@ class AntitabacoQuestion1(Page):
     form_fields = ['antitabaco_group']
 
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 1
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1386,7 +1408,7 @@ class AntitabacoQuestion1(Page):
 
 class TabacoWaitForMember1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 2:
@@ -1394,7 +1416,7 @@ class TabacoWaitForMember1(WaitPage):
         
 class TabacoShowResponseMember1(Page):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -1406,7 +1428,7 @@ class TabacoQuestionsForMember1(Page):
     form_fields = ['Tabaco_money_expected2', 'Tabaco_money_expected3', 'Tabaco_money_notexpected2', 'Tabaco_money_notexpected3', 'Tabaco_realtypejueces2', 'Tabaco_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 1
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1417,7 +1439,7 @@ class TabacoDistributeMoneyPage1(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 2 y 3
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] in [2, 3]
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] in [2, 3]
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -1426,7 +1448,7 @@ class TabacoDistributeMoneyPage1(Page):
     
 class TabacoWaitForMoneyDistribution1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1435,7 +1457,7 @@ class AntitabacoQuestion2(Page):
     form_model = 'player'
     form_fields = ['antitabaco_group']
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 2
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 2
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
@@ -1443,7 +1465,7 @@ class AntitabacoQuestion2(Page):
 
 class TabacoWaitForMember2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 3:
@@ -1451,7 +1473,7 @@ class TabacoWaitForMember2(WaitPage):
         
 class TabacoShowResponseMember2(Page):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -1463,7 +1485,7 @@ class TabacoQuestionsForMember2(Page):
     form_fields = ['Tabaco_money_expected1', 'Tabaco_money_expected3', 'Tabaco_money_notexpected1', 'Tabaco_money_notexpected3', 'Tabaco_realtypejueces1', 'Tabaco_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 2
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 2
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1474,7 +1496,7 @@ class TabacoDistributeMoneyPage2(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] in [1, 3]
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] in [1, 3]
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -1483,7 +1505,7 @@ class TabacoDistributeMoneyPage2(Page):
     
 class TabacoWaitForMoneyDistribution2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1492,7 +1514,7 @@ class AntitabacoQuestion3(Page):
     form_model = 'player'
     form_fields = ['antitabaco_group']
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 3
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 3
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 4  # Indica que todos han completado
     def vars_for_template(self):
@@ -1500,7 +1522,7 @@ class AntitabacoQuestion3(Page):
 
 class TabacoWaitForMember3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 4:
@@ -1508,7 +1530,7 @@ class TabacoWaitForMember3(WaitPage):
         
 class TabacoShowResponseMember3(Page):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -1520,7 +1542,7 @@ class TabacoQuestionsForMember3(Page):
     form_fields = ['Tabaco_money_expected1', 'Tabaco_money_expected2', 'Tabaco_money_notexpected1', 'Tabaco_money_notexpected2', 'Tabaco_realtypejueces1', 'Tabaco_realtypejueces2']
     
     def is_displayed(self):
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] == 3
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] == 3
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1531,7 +1553,7 @@ class TabacoDistributeMoneyPage3(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 2 and self.participant.vars['order_number_Tabaco'] in [1, 2]
+        return self.round_number == 5 and self.participant.vars['order_number_Tabaco'] in [1, 2]
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -1540,7 +1562,7 @@ class TabacoDistributeMoneyPage3(Page):
     
 class TabacoWaitForMoneyDistribution3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 2
+        return self.round_number == 5
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1551,7 +1573,7 @@ class GlobalSyncWaitPage_Arte(WaitPage):
     wait_for_all_groups = True
 
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
 
     def after_all_players_arrive(self):
         self.session.vars['groups_formed_Arte'] = False
@@ -1560,7 +1582,7 @@ class GlobalSyncWaitPage_Arte(WaitPage):
 
 class Forming_Groups_WaitPage_Arte(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def body_text(self):
         return "Gracias por responder a las preguntas. Por favor espere a la indicación del encargado.<br><br>Favor de esperar a que todos los participantes hayan respondido a las preguntas."
@@ -1606,6 +1628,7 @@ class Forming_Groups_WaitPage_Arte(WaitPage):
                 # Asignar contexto y actualizar contadores
                 for player in selected_players:
                     player.participant.vars['context_Arte'] = f"Contexto {contexto_seleccionado}"
+                    player.context_text_Arte = f"Contexto {contexto_seleccionado}"
                     player.participant.vars['group_number_Arte'] = group_number_Arte
                     player.participant.vars['order_number_Arte'] = order_number_Arte  # Asignar número de orden
                     order_number_Arte += 1
@@ -1648,7 +1671,7 @@ class Forming_Groups_WaitPage_Arte(WaitPage):
 
 class GroupingSyncWaitPage_Arte(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         # Llama al método set_custom_grouping directamente, no como una cadena
@@ -1656,7 +1679,7 @@ class GroupingSyncWaitPage_Arte(WaitPage):
    
 class ShowContext_Arte(Page):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
 
     def vars_for_template(self):
         context_Arte = self.participant.vars.get('context_Arte', 'Sin Contexto')
@@ -1686,7 +1709,7 @@ class ArteQuestion1(Page):
     form_fields = ['arte_group']
 
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 1
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1696,7 +1719,7 @@ class ArteQuestion1(Page):
 
 class ArteWaitForMember1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 2:
@@ -1704,7 +1727,7 @@ class ArteWaitForMember1(WaitPage):
         
 class ArteShowResponseMember1(Page):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -1716,7 +1739,7 @@ class ArteQuestionsForMember1(Page):
     form_fields = ['Arte_money_expected2', 'Arte_money_expected3', 'Arte_money_notexpected2', 'Arte_money_notexpected3', 'Arte_realtypejueces2', 'Arte_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 1
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1727,7 +1750,7 @@ class ArteDistributeMoneyPage1(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 2 y 3
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] in [2, 3]
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] in [2, 3]
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -1736,7 +1759,7 @@ class ArteDistributeMoneyPage1(Page):
     
 class ArteWaitForMoneyDistribution1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1745,7 +1768,7 @@ class ArteQuestion2(Page):
     form_model = 'player'
     form_fields = ['arte_group']
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 2
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 2
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
@@ -1753,7 +1776,7 @@ class ArteQuestion2(Page):
 
 class ArteWaitForMember2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 3:
@@ -1761,7 +1784,7 @@ class ArteWaitForMember2(WaitPage):
         
 class ArteShowResponseMember2(Page):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -1773,7 +1796,7 @@ class ArteQuestionsForMember2(Page):
     form_fields = ['Arte_money_expected1', 'Arte_money_expected3', 'Arte_money_notexpected1', 'Arte_money_notexpected3', 'Arte_realtypejueces1', 'Arte_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 2
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 2
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1784,7 +1807,7 @@ class ArteDistributeMoneyPage2(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] in [1, 3]
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] in [1, 3]
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -1793,7 +1816,7 @@ class ArteDistributeMoneyPage2(Page):
     
 class ArteWaitForMoneyDistribution2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1802,7 +1825,7 @@ class ArteQuestion3(Page):
     form_model = 'player'
     form_fields = ['arte_group']
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 3
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 3
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 4  # Indica que todos han completado
     def vars_for_template(self):
@@ -1810,7 +1833,7 @@ class ArteQuestion3(Page):
 
 class ArteWaitForMember3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 4:
@@ -1818,7 +1841,7 @@ class ArteWaitForMember3(WaitPage):
         
 class ArteShowResponseMember3(Page):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -1830,7 +1853,7 @@ class ArteQuestionsForMember3(Page):
     form_fields = ['Arte_money_expected1', 'Arte_money_expected2', 'Arte_money_notexpected1', 'Arte_money_notexpected2', 'Arte_realtypejueces1', 'Arte_realtypejueces2']
     
     def is_displayed(self):
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] == 3
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] == 3
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -1841,7 +1864,7 @@ class ArteDistributeMoneyPage3(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 3 and self.participant.vars['order_number_Arte'] in [1, 2]
+        return self.round_number == 4 and self.participant.vars['order_number_Arte'] in [1, 2]
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -1850,7 +1873,7 @@ class ArteDistributeMoneyPage3(Page):
     
 class ArteWaitForMoneyDistribution3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 3
+        return self.round_number == 4
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -1861,7 +1884,7 @@ class GlobalSyncWaitPage_Violencia(WaitPage):
     wait_for_all_groups = True
 
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
 
     def after_all_players_arrive(self):
         self.session.vars['groups_formed_Violencia'] = False
@@ -1870,7 +1893,7 @@ class GlobalSyncWaitPage_Violencia(WaitPage):
 
 class Forming_Groups_WaitPage_Violencia(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def body_text(self):
         return "Gracias por responder a las preguntas. Por favor espere a la indicación del encargado.<br><br>Favor de esperar a que todos los participantes hayan respondido a las preguntas."
@@ -1916,6 +1939,7 @@ class Forming_Groups_WaitPage_Violencia(WaitPage):
                 # Asignar contexto y actualizar contadores
                 for player in selected_players:
                     player.participant.vars['context_Violencia'] = f"Contexto {contexto_seleccionado}"
+                    player.context_text_Violencia = f"Contexto {contexto_seleccionado}"
                     player.participant.vars['group_number_Violencia'] = group_number_Violencia
                     player.participant.vars['order_number_Violencia'] = order_number_Violencia  # Asignar número de orden
                     order_number_Violencia += 1
@@ -1958,7 +1982,7 @@ class Forming_Groups_WaitPage_Violencia(WaitPage):
 
 class GroupingSyncWaitPage_Violencia(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         # Llama al método set_custom_grouping directamente, no como una cadena
@@ -1966,7 +1990,7 @@ class GroupingSyncWaitPage_Violencia(WaitPage):
    
 class ShowContext_Violencia(Page):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
 
     def vars_for_template(self):
         context_Violencia = self.participant.vars.get('context_Violencia', 'Sin Contexto')
@@ -1996,7 +2020,7 @@ class ViolenciaQuestion1(Page):
     form_fields = ['violencia_group']
 
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 1
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2006,7 +2030,7 @@ class ViolenciaQuestion1(Page):
 
 class ViolenciaWaitForMember1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 2:
@@ -2014,7 +2038,7 @@ class ViolenciaWaitForMember1(WaitPage):
         
 class ViolenciaShowResponseMember1(Page):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -2026,7 +2050,7 @@ class ViolenciaQuestionsForMember1(Page):
     form_fields = ['Violencia_money_expected2', 'Violencia_money_expected3', 'Violencia_money_notexpected2', 'Violencia_money_notexpected3', 'Violencia_realtypejueces2', 'Violencia_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 1
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2037,7 +2061,7 @@ class ViolenciaDistributeMoneyPage1(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 2 y 3
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] in [2, 3]
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] in [2, 3]
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -2046,7 +2070,7 @@ class ViolenciaDistributeMoneyPage1(Page):
     
 class ViolenciaWaitForMoneyDistribution1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2055,7 +2079,7 @@ class ViolenciaQuestion2(Page):
     form_model = 'player'
     form_fields = ['violencia_group']
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 2
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 2
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
@@ -2063,7 +2087,7 @@ class ViolenciaQuestion2(Page):
 
 class ViolenciaWaitForMember2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 3:
@@ -2071,7 +2095,7 @@ class ViolenciaWaitForMember2(WaitPage):
         
 class ViolenciaShowResponseMember2(Page):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -2083,7 +2107,7 @@ class ViolenciaQuestionsForMember2(Page):
     form_fields = ['Violencia_money_expected1', 'Violencia_money_expected3', 'Violencia_money_notexpected1', 'Violencia_money_notexpected3', 'Violencia_realtypejueces1', 'Violencia_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 2
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 2
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2094,7 +2118,7 @@ class ViolenciaDistributeMoneyPage2(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] in [1, 3]
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] in [1, 3]
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -2103,7 +2127,7 @@ class ViolenciaDistributeMoneyPage2(Page):
     
 class ViolenciaWaitForMoneyDistribution2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2112,7 +2136,7 @@ class ViolenciaQuestion3(Page):
     form_model = 'player'
     form_fields = ['violencia_group']
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 3
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 3
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 4  # Indica que todos han completado
     def vars_for_template(self):
@@ -2120,7 +2144,7 @@ class ViolenciaQuestion3(Page):
 
 class ViolenciaWaitForMember3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 4:
@@ -2128,7 +2152,7 @@ class ViolenciaWaitForMember3(WaitPage):
         
 class ViolenciaShowResponseMember3(Page):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -2140,7 +2164,7 @@ class ViolenciaQuestionsForMember3(Page):
     form_fields = ['Violencia_money_expected1', 'Violencia_money_expected2', 'Violencia_money_notexpected1', 'Violencia_money_notexpected2', 'Violencia_realtypejueces1', 'Violencia_realtypejueces2']
     
     def is_displayed(self):
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] == 3
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] == 3
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2151,7 +2175,7 @@ class ViolenciaDistributeMoneyPage3(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 4 and self.participant.vars['order_number_Violencia'] in [1, 2]
+        return self.round_number == 2 and self.participant.vars['order_number_Violencia'] in [1, 2]
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -2160,7 +2184,7 @@ class ViolenciaDistributeMoneyPage3(Page):
     
 class ViolenciaWaitForMoneyDistribution3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 4
+        return self.round_number == 2
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2171,7 +2195,7 @@ class GlobalSyncWaitPage_Crisis(WaitPage):
     wait_for_all_groups = True
 
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
 
     def after_all_players_arrive(self):
         self.session.vars['groups_formed_Crisis'] = False
@@ -2180,7 +2204,7 @@ class GlobalSyncWaitPage_Crisis(WaitPage):
 
 class Forming_Groups_WaitPage_Crisis(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def body_text(self):
         return "Gracias por responder a las preguntas. Por favor espere a la indicación del encargado.<br><br>Favor de esperar a que todos los participantes hayan respondido a las preguntas."
@@ -2226,6 +2250,7 @@ class Forming_Groups_WaitPage_Crisis(WaitPage):
                 # Asignar contexto y actualizar contadores
                 for player in selected_players:
                     player.participant.vars['context_Crisis'] = f"Contexto {contexto_seleccionado}"
+                    player.context_text_Crisis = f"Contexto {contexto_seleccionado}"
                     player.participant.vars['group_number_Crisis'] = group_number_Crisis
                     player.participant.vars['order_number_Crisis'] = order_number_Crisis  # Asignar número de orden
                     order_number_Crisis += 1
@@ -2268,7 +2293,7 @@ class Forming_Groups_WaitPage_Crisis(WaitPage):
 
 class GroupingSyncWaitPage_Crisis(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         # Llama al método set_custom_grouping directamente, no como una cadena
@@ -2276,7 +2301,7 @@ class GroupingSyncWaitPage_Crisis(WaitPage):
    
 class ShowContext_Crisis(Page):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
 
     def vars_for_template(self):
         context_Crisis = self.participant.vars.get('context_Crisis', 'Sin Contexto')
@@ -2306,7 +2331,7 @@ class CrisisQuestion1(Page):
     form_fields = ['crisis_group']
 
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 1
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2316,7 +2341,7 @@ class CrisisQuestion1(Page):
 
 class CrisisWaitForMember1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 2:
@@ -2324,7 +2349,7 @@ class CrisisWaitForMember1(WaitPage):
         
 class CrisisShowResponseMember1(Page):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -2336,7 +2361,7 @@ class CrisisQuestionsForMember1(Page):
     form_fields = ['Crisis_money_expected2', 'Crisis_money_expected3', 'Crisis_money_notexpected2', 'Crisis_money_notexpected3', 'Crisis_realtypejueces2', 'Crisis_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 1
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 1
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2347,7 +2372,7 @@ class CrisisDistributeMoneyPage1(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 2 y 3
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] in [2, 3]
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] in [2, 3]
     
     def vars_for_template(self):
         member1 = self.group.get_player_by_id(1)
@@ -2356,7 +2381,7 @@ class CrisisDistributeMoneyPage1(Page):
     
 class CrisisWaitForMoneyDistribution1(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2365,7 +2390,7 @@ class CrisisQuestion2(Page):
     form_model = 'player'
     form_fields = ['crisis_group']
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 2
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 2
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 3  # Indica que ahora es el turno del miembro 3
     def vars_for_template(self):
@@ -2373,7 +2398,7 @@ class CrisisQuestion2(Page):
 
 class CrisisWaitForMember2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 3:
@@ -2381,7 +2406,7 @@ class CrisisWaitForMember2(WaitPage):
         
 class CrisisShowResponseMember2(Page):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -2393,7 +2418,7 @@ class CrisisQuestionsForMember2(Page):
     form_fields = ['Crisis_money_expected1', 'Crisis_money_expected3', 'Crisis_money_notexpected1', 'Crisis_money_notexpected3', 'Crisis_realtypejueces1', 'Crisis_realtypejueces3']
     
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 2
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 2
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2404,7 +2429,7 @@ class CrisisDistributeMoneyPage2(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] in [1, 3]
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] in [1, 3]
     
     def vars_for_template(self):
         member2 = self.group.get_player_by_id(2)
@@ -2413,7 +2438,7 @@ class CrisisDistributeMoneyPage2(Page):
     
 class CrisisWaitForMoneyDistribution2(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2422,7 +2447,7 @@ class CrisisQuestion3(Page):
     form_model = 'player'
     form_fields = ['crisis_group']
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 3
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 3
     def before_next_page(self, timeout_happened):
         self.group.current_responder = 4  # Indica que todos han completado
     def vars_for_template(self):
@@ -2430,7 +2455,7 @@ class CrisisQuestion3(Page):
 
 class CrisisWaitForMember3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         if self.group.current_responder == 4:
@@ -2438,7 +2463,7 @@ class CrisisWaitForMember3(WaitPage):
         
 class CrisisShowResponseMember3(Page):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -2450,7 +2475,7 @@ class CrisisQuestionsForMember3(Page):
     form_fields = ['Crisis_money_expected1', 'Crisis_money_expected2', 'Crisis_money_notexpected1', 'Crisis_money_notexpected2', 'Crisis_realtypejueces1', 'Crisis_realtypejueces2']
     
     def is_displayed(self):
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] == 3
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] == 3
     
     def vars_for_template(self):
         return dict(next_button_label="Continuar")
@@ -2461,7 +2486,7 @@ class CrisisDistributeMoneyPage3(Page):
 
     def is_displayed(self):
         # Solo se muestra para los miembros 1 y 3
-        return self.round_number == 5 and self.participant.vars['order_number_Crisis'] in [1, 2]
+        return self.round_number == 3 and self.participant.vars['order_number_Crisis'] in [1, 2]
     
     def vars_for_template(self):
         member3 = self.group.get_player_by_id(3)
@@ -2470,7 +2495,7 @@ class CrisisDistributeMoneyPage3(Page):
     
 class CrisisWaitForMoneyDistribution3(WaitPage):
     def is_displayed(self):
-        return self.round_number == 5
+        return self.round_number == 3
     
     def after_all_players_arrive(self):
         return  # Esto asegura que todos hayan pasado por DistributeMoneyPage antes de continuar
@@ -2511,50 +2536,6 @@ page_sequence = [
     PruebaQuestionsForMember3,
     PruebaDistributeMoneyPage3,
     PruebaWaitForMoneyDistribution3,
-    GlobalSyncWaitPage_Tabaco,
-    Forming_Groups_WaitPage_Tabaco,
-    GroupingSyncWaitPage_Tabaco,
-    ShowContext_Tabaco,
-    AntitabacoQuestion1,
-    TabacoWaitForMember1,
-    TabacoShowResponseMember1,
-    TabacoQuestionsForMember1,
-    TabacoDistributeMoneyPage1,
-    TabacoWaitForMoneyDistribution1,
-    AntitabacoQuestion2,
-    TabacoWaitForMember2,
-    TabacoShowResponseMember2,
-    TabacoQuestionsForMember2,
-    TabacoDistributeMoneyPage2,
-    TabacoWaitForMoneyDistribution2,
-    AntitabacoQuestion3,
-    TabacoWaitForMember3,
-    TabacoShowResponseMember3,
-    TabacoQuestionsForMember3,
-    TabacoDistributeMoneyPage3,
-    TabacoWaitForMoneyDistribution3,
-    GlobalSyncWaitPage_Arte,
-    Forming_Groups_WaitPage_Arte,
-    GroupingSyncWaitPage_Arte,
-    ShowContext_Arte,
-    ArteQuestion1,
-    ArteWaitForMember1,
-    ArteShowResponseMember1,
-    ArteQuestionsForMember1,
-    ArteDistributeMoneyPage1,
-    ArteWaitForMoneyDistribution1,
-    ArteQuestion2,
-    ArteWaitForMember2,
-    ArteShowResponseMember2,
-    ArteQuestionsForMember2,
-    ArteDistributeMoneyPage2,
-    ArteWaitForMoneyDistribution2,
-    ArteQuestion3,
-    ArteWaitForMember3,
-    ArteShowResponseMember3,
-    ArteQuestionsForMember3,
-    ArteDistributeMoneyPage3,
-    ArteWaitForMoneyDistribution3,
     GlobalSyncWaitPage_Violencia,
     Forming_Groups_WaitPage_Violencia,
     GroupingSyncWaitPage_Violencia,
@@ -2599,5 +2580,49 @@ page_sequence = [
     CrisisQuestionsForMember3,
     CrisisDistributeMoneyPage3,
     CrisisWaitForMoneyDistribution3,
+    GlobalSyncWaitPage_Arte,
+    Forming_Groups_WaitPage_Arte,
+    GroupingSyncWaitPage_Arte,
+    ShowContext_Arte,
+    ArteQuestion1,
+    ArteWaitForMember1,
+    ArteShowResponseMember1,
+    ArteQuestionsForMember1,
+    ArteDistributeMoneyPage1,
+    ArteWaitForMoneyDistribution1,
+    ArteQuestion2,
+    ArteWaitForMember2,
+    ArteShowResponseMember2,
+    ArteQuestionsForMember2,
+    ArteDistributeMoneyPage2,
+    ArteWaitForMoneyDistribution2,
+    ArteQuestion3,
+    ArteWaitForMember3,
+    ArteShowResponseMember3,
+    ArteQuestionsForMember3,
+    ArteDistributeMoneyPage3,
+    ArteWaitForMoneyDistribution3,
+    GlobalSyncWaitPage_Tabaco,
+    Forming_Groups_WaitPage_Tabaco,
+    GroupingSyncWaitPage_Tabaco,
+    ShowContext_Tabaco,
+    AntitabacoQuestion1,
+    TabacoWaitForMember1,
+    TabacoShowResponseMember1,
+    TabacoQuestionsForMember1,
+    TabacoDistributeMoneyPage1,
+    TabacoWaitForMoneyDistribution1,
+    AntitabacoQuestion2,
+    TabacoWaitForMember2,
+    TabacoShowResponseMember2,
+    TabacoQuestionsForMember2,
+    TabacoDistributeMoneyPage2,
+    TabacoWaitForMoneyDistribution2,
+    AntitabacoQuestion3,
+    TabacoWaitForMember3,
+    TabacoShowResponseMember3,
+    TabacoQuestionsForMember3,
+    TabacoDistributeMoneyPage3,
+    TabacoWaitForMoneyDistribution3,
     ThankYouPage
 ]
